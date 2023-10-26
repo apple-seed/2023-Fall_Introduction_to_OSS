@@ -75,8 +75,7 @@ do
             done
             ;;
         "8")
-            read -p "Do you want to get the average 'rating' of movies rated by users with 'age' between \
-                20 and 29 and 'occupation' as 'programmer'?(y/n): " userCommand
+            read -p "Do you want to get the average 'rating' of movies rated by users with 'age' between 20 and 29 and 'occupation' as 'programmer'?(y/n): " userCommand
             if [ $userCommand = "y" ]
             then 
                 #20대 프로그래머의 userID 리스트 구하기

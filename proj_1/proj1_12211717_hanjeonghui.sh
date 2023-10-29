@@ -28,8 +28,11 @@ do
         "1") #Get the data of the movie identified by a specific 'movie id' from 'u.item'
             read -p "Please enter the 'movie id'(1~1682): " movieID #특정 'movie id' 입력받기 
 
-            #awk를 이용해 해당 movieID를 가지는 영화의 정보를 출력한다.
-            cat $1 | awk -F\| -v id=$movieID '$1==id {print}' 
+            if [ $movieID -gt 0 ] && [ $movieID -lt 1683 ] #movieID의 범위 체크
+            then
+                #awk를 이용해 해당 movieID를 가지는 영화의 정보를 출력한다.
+                cat $1 | awk -F\| -v id=$movieID '$1==id {print}' 
+            fi
         ;;
 
 
@@ -48,13 +51,17 @@ do
         "3") #Get the average 'rating’ of the movie identified by specific 'movie id' from 'u.data’
             read -p "Please enter the 'movie id'(1~1682): " movieID #특정 'movie id' 입력받기 
 
-            #awk를 이용하여 입력된 movieID과 관련된 평점 정보만 추출한다.
-            movieRatingAve=$( cat $2 | awk -F '\t' -v mvID=$movieID '$2==mvID {print $3}' | \
-            #awk를 이용해 평점 평균을 계산한다.
-            awk '{sum += $1} END {print sum/NR}') 
             
-            #print format에 맞게 출력한다.
-            echo "average rating of ${movieID}: ${movieRatingAve}"
+            if [ $movieID -gt 0 ] && [ $movieID -lt 1683 ] #movieID의 범위 체크
+            then
+                #awk를 이용하여 입력된 movieID과 관련된 평점 정보만 추출한다.
+                movieRatingAve=$( cat $2 | awk -F '\t' -v mvID=$movieID '$2==mvID {print $3}' | \
+                #awk를 이용해 평점 평균을 계산한다.
+                awk '{sum += $1} END {print sum/NR}') 
+            
+                #print format에 맞게 출력한다.
+                echo "average rating of ${movieID}: ${movieRatingAve}"
+            fi
         ;;
 
 
@@ -105,22 +112,26 @@ do
         "7") #Get the data of movies rated by a specific 'user id' from 'u.data'
             read -p "Please enter the 'user id'(1~943): " userID #특정 'user id' 입력받기
 
-            #awk를 이용해 u.data에서 해당 userID인 사람이 평점을 준 영화 리스트를 추출한다.
-            #sort를 이용해 movieID를 정렬하되, -u 옵션을 주어 중복된 movieID는 제거되도록 한다.
-            movieList=$(cat $2 | awk -F '\t' -v uID=$userID '$1==uID {print $2}' | sort -un)
+             if [ $userID -gt 0 ] && [ $userID -lt 944 ] #movieID의 범위 체크
+            then
+                #awk를 이용해 u.data에서 해당 userID인 사람이 평점을 준 영화 리스트를 추출한다.
+                #sort를 이용해 movieID를 정렬하되, -u 옵션을 주어 중복된 movieID는 제거되도록 한다.
+                movieList=$(cat $2 | awk -F '\t' -v uID=$userID '$1==uID {print $2}' | sort -un)
             
-            #첫번째 print format에 맞게 줄바꿈 대신 | 로 구분하여 출력한다.
-            echo "$movieList" | sed -e ':a;N;$!ba;s/\n/|/g'
-            echo ""
+                #첫번째 print format에 맞게 줄바꿈 대신 | 로 구분하여 출력한다.
+                echo "$movieList" | sed -e ':a;N;$!ba;s/\n/|/g'
+                echo ""
 
-            #조건에 맞는 상위 10개의 영화에 대해
-            for movieID in $(echo "$movieList" | head)
-            do
-                #awk를 이용해 u.item에서 해당 movieID를 가지는 영화를 찾는다.
-                movieName=$(cat $1 | awk -F '|' -v mvID="$movieID" '$1==mvID {print $2}')
-                #두번째 print format에 맞게 movie id와 movie title을 출력한다.
-                echo "$movieID|$movieName"
-            done
+                #조건에 맞는 상위 10개의 영화에 대해
+                for movieID in $(echo "$movieList" | head)
+                do
+                    #awk를 이용해 u.item에서 해당 movieID를 가지는 영화를 찾는다.
+                    movieName=$(cat $1 | awk -F '|' -v mvID="$movieID" '$1==mvID {print $2}')
+                    #두번째 print format에 맞게 movie id와 movie title을 출력한다.
+                    echo "$movieID|$movieName"
+                done
+            fi
+            
         ;;
 
 

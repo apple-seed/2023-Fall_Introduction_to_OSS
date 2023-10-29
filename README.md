@@ -50,4 +50,6 @@ movie id가 1673~1682인 총 10개의 영화에 대해 영화 정보를 출력�
 <br>
 
 ## :three: 작동 예시
+https://github.com/apple-seed/Introduction_to_OSS/assets/81312141/3ac7f6b7-0f66-46e0-be35-4a2295c32167
+
 
